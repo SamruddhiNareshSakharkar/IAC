@@ -8,6 +8,10 @@ jobs:
   apply: 
     runs-on: ubuntu-latest 
     environment: production # Requires manual approval gate (configure in repo settings) 
+
+    permissions:
+      contents: write 
+
     steps: 
       - uses: actions/checkout@v4 
       - uses: hashicorp/setup-terraform@v3 
@@ -21,10 +25,11 @@ jobs:
       - name: Apply 
         run: terraform apply -auto-approve tfplan 
         
-      - name: Commit updated state back to Git 
-        run: | 
-          git config user.email "ci@github-actions" 
-          git config user.name "GitHub Actions" 
-          git add -f terraform.tfstate 
-          git diff --staged --quiet || git commit -m "ci: update terraform state after apply [skip ci]" 
+      - name: Commit updated state back to Git
+        run: |
+          git config user.email "ci@github-actions"
+          git config user.name "GitHub Actions"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git add terraform.tfstate
+          git commit -m "ci: update terraform state after apply [skip ci]" || echo "No changes to commit"
           git push
