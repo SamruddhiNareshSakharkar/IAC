@@ -1,0 +1,20 @@
+on: 
+  push: 
+    branches: [main] # On push to main 
+  pull_request: 
+    branches: [main] # On PR targeting main 
+
+# JOBS: parallel or sequential units of work 
+jobs: 
+  validate: # Job ID (arbitrary name) 
+    runs-on: ubuntu-latest # Runner OS 
+    steps: 
+      # Step 1: checkout code 
+      - uses: actions/checkout@v4 
+      # Step 2: install Terraform 
+      - uses: hashicorp/setup-terraform@v3 
+        with: 
+          terraform_version: "1.7.0" 
+      # Step 3: run a command 
+      - name: Validate 
+        run: terraform validate
