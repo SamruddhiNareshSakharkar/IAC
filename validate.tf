@@ -1,23 +1,17 @@
-name: Terraform Validate
+terraform {
+  required_version = ">= 1.7.0"
 
-on:
-  pull_request:
-    branches:
-      - main
+  required_providers {
+    local = {
+      source  = "hashicorp/local"
+      version = "~> 2.5"
+    }
+  }
+}
 
-jobs:
-  validate:
-    runs-on: ubuntu-latest
+provider "local" {}
 
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-
-      - name: Terraform Init
-        run: terraform init
-
-      - name: Terraform Validate
-        run: terraform validate
+resource "local_file" "example" {
+  filename = "example.txt"
+  content  = "Hello Terraform"
+}
