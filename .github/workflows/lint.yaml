@@ -1,0 +1,25 @@
+name: Terraform Lint
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.7.0"
+
+      - name: Check formatting
+        run: terraform fmt -check -recursive
+
+      - name: Validate syntax
+        run: |
+          terraform init -backend=false
+          terraform validate
