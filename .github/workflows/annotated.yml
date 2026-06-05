@@ -15,6 +15,6 @@ jobs:
       - uses: hashicorp/setup-terraform@v3 
         with: 
           terraform_version: "1.7.0" 
-      # Step 3: run a command 
+      
       - name: Validate 
         run: terraform validate
